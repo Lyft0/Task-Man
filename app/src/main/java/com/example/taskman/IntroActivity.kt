@@ -17,6 +17,12 @@ class IntroActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
+        // Pindah ke sign in screen
+        val btnSignIn = findViewById<Button>(R.id.btn_sign_in_intro)
+        btnSignIn.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
+        }
+
     }
 
 }

@@ -38,7 +38,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Collaborate and Plan Together Across Multiple Devices on Task Man Minimalist Interface"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut metus ex. Etiam mollis libero in massa."
         android:textSize="16sp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
