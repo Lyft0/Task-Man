@@ -12,7 +12,7 @@
         android:theme="@style/Theme.TaskMan"
         tools:targetApi="31">
         <activity
-            android:name=".BaseActivity"
+            android:name=".activities.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignInActivity"
@@ -42,7 +42,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            />
         </activity>
         <activity
             android:name=".activities.MainActivity"

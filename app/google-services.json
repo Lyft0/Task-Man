@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631632549413",
+    "project_id": "task-man-c4bf2",
+    "storage_bucket": "task-man-c4bf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631632549413:android:9907d315f7d47e81f111cc",
+        "android_client_info": {
+          "package_name": "com.example.taskman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631632549413-vecafcgoan2be719uoeshnqu9sk1632s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABbvC5yekS04Y8WqYAY8Anaf3duVkZTh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631632549413-vecafcgoan2be719uoeshnqu9sk1632s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
