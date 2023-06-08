@@ -1,11 +1,11 @@
-package com.example.taskman
+package com.example.taskman.activities
 
 import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import java.util.logging.Handler
+import com.example.taskman.R
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         tvAppName.typeface = typeFace
 
         android.os.Handler().postDelayed({
-            startActivity(Intent(this,IntroActivity::class.java))
+            startActivity(Intent(this, IntroActivity::class.java))
             finish()
         },2500)
     }
