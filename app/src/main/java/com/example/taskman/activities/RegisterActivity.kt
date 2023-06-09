@@ -8,6 +8,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.taskman.R
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class RegisterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +50,50 @@ class RegisterActivity : BaseActivity() {
         val password: String = fieldPass.text.toString().trim { it <= ' ' }
 
         if (validateForm(name, email, password)) {
-            Toast.makeText(
-                this@RegisterActivity,
-                "Now we can register a new user.",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Show the progress dialog.
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirebaseApp.initializeApp(this)
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(
+                    OnCompleteListener<AuthResult> { task ->
+
+                        // Hide the progress dialog
+                        hideProgressDialog()
+
+                        // If the registration is successfully done
+                        if (task.isSuccessful) {
+
+                            // Firebase registered user
+                            val firebaseUser: FirebaseUser = task.result!!.user!!
+                            // Registered Email
+                            val registeredEmail = firebaseUser.email!!
+
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "$name you have successfully registered with email id $registeredEmail.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            /**
+                             * Here the new user registered is automatically signed-in so we just sign-out the user from firebase
+                             * and send him to Intro Screen for Sign-In
+                             */
+
+                            /**
+                             * Here the new user registered is automatically signed-in so we just sign-out the user from firebase
+                             * and send him to Intro Screen for Sign-In
+                             */
+                            FirebaseAuth.getInstance().signOut()
+                            // Finish the Sign-Up Screen
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                task.exception!!.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
         }
     }
 

@@ -30,8 +30,8 @@ open class BaseActivity : AppCompatActivity() {
 
         // Set konten layar dari layout resource
         mProgressDialog.setContentView(R.layout.dialog_progress)
-        val tmProgressText = findViewById<TextView>(R.id.tm_progress_text)
-        tmProgressText.text = text
+//        val tmProgressText = findViewById<TextView>(R.id.tm_progress_text)
+//        mProgressDialog.tm_progress_text.text = text
 
         // Start dialog dan tampilkan ke layar
         mProgressDialog.show()
