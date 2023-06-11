@@ -1,6 +1,8 @@
 package com.example.taskman.firebase
 
+import android.app.Activity
 import android.util.Log
+import com.example.taskman.activities.MainActivity
 import com.example.taskman.activities.RegisterActivity
 import com.example.taskman.activities.SignInActivity
 import com.example.taskman.models.User
@@ -37,7 +39,7 @@ class FirestoreClass {
     }
 
     // get user data ketika sign in
-    fun signInUser(activity: SignInActivity){
+    fun signInUser(activity: Activity){
         mFireStore.collection(Constants.USERS)
             // document ID untuk users fields
             .document(getCurrentUserID())
@@ -45,24 +47,42 @@ class FirestoreClass {
             .get()
             .addOnSuccessListener { document ->
                 // jika sukses
-                val loggedInUser = document.toObject(User::class.java)
-                if(loggedInUser != null)
-                    activity.signInSuccess(loggedInUser)
+                val loggedInUser = document.toObject(User::class.java)!!
+                when (activity) {
+                    is SignInActivity -> {
+                        activity.signInSuccess(loggedInUser)
+                    }
+                    is MainActivity -> {
+                        activity.updateNavigationUserDetails(loggedInUser)
+                    }
+                }
             }
             .addOnFailureListener { e ->
-                // jika gagal
+                when (activity) {
+                    is SignInActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                    is MainActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                }
                 Log.e(
-                    "SignInUser",
-                    "Error writing document",
+                    activity.javaClass.simpleName,
+                    "Error while getting loggedIn user details",
                     e
                 )
             }
     }
 
-
     // get UserID dari current user
     fun getCurrentUserID(): String {
-        return FirebaseAuth.getInstance().currentUser!!.uid
+        // auto login
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        var currentUserID = ""
+        if (currentUser != null) {
+            currentUserID = currentUser.uid
+        }
+        return currentUserID
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import com.example.taskman.R
+import com.example.taskman.firebase.FirestoreClass
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +19,15 @@ class SplashActivity : AppCompatActivity() {
         tvAppName.typeface = typeFace
 
         android.os.Handler().postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
+            val currentUserID = FirestoreClass().getCurrentUserID()
+            // auto login
+            if (currentUserID.isNotEmpty()) {
+                // start main activity
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            } else {
+                // intro screen
+                startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
+            }
             finish()
         },2500)
     }
