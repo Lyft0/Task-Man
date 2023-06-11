@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.taskman.R
+import com.example.taskman.firebase.FirestoreClass
+import com.example.taskman.models.User
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +31,12 @@ class SignInActivity : BaseActivity() {
         }
 
         setupActionBar()
+    }
+
+    fun signInSuccess(user: User){
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun setupActionBar(){
@@ -59,13 +67,7 @@ class SignInActivity : BaseActivity() {
                 .addOnCompleteListener { task ->
                     hideProgressDialog()
                     if (task.isSuccessful) {
-
-                        Toast.makeText(
-                            this@SignInActivity,
-                            "You have successfully signed in. $email",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(this@SignInActivity, MainActivity::class.java))
+                        FirestoreClass().signInUser(this@SignInActivity)
                     } else {
                         Toast.makeText(
                             this@SignInActivity,
