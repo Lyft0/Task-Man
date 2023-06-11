@@ -4,4 +4,8 @@
 
     <!-- Progress dialog -->
     <string name="please_wait">Please Wait&#8230;</string>
+
+    <!-- My Profile -->
+    <string name="my_profile">My Profile</string>
+
 </resources>
