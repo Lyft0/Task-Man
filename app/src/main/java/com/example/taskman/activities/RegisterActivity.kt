@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.taskman.R
+import com.example.taskman.firebase.FirestoreClass
+import com.example.taskman.models.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
@@ -20,6 +22,20 @@ class RegisterActivity : BaseActivity() {
         setContentView(R.layout.activity_register)
         setupActionBar()
     }
+
+    // user success register
+    fun userRegisteredSuccess(){
+        Toast.makeText(
+            this@RegisterActivity,
+            "You have successfully registered.",
+            Toast.LENGTH_SHORT
+        ).show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut()
+        // finish register screen
+        finish()
+    }
+
 
     private fun setupActionBar(){
         val toolbarRegister = findViewById<Toolbar>(R.id.toolbar_register)
@@ -56,27 +72,16 @@ class RegisterActivity : BaseActivity() {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     OnCompleteListener<AuthResult> { task ->
-
-                        // Hide the progress dialog
-                        hideProgressDialog()
-
                         // If the registration is successfully done
                         if (task.isSuccessful) {
-
-                            // Firebase registered user
+                            // firebase registered user
                             val firebaseUser: FirebaseUser = task.result!!.user!!
-                            // Registered Email
+                            // registered Email
                             val registeredEmail = firebaseUser.email!!
-
-                            Toast.makeText(
-                                this@RegisterActivity,
-                                "$name you have successfully registered with email id $registeredEmail.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            FirebaseAuth.getInstance().signOut()
-                            // Finish the Sign-Up Screen
-                            finish()
+                            val user = User(
+                                firebaseUser.uid, name, registeredEmail
+                            )
+                            FirestoreClass().registerUser(this@RegisterActivity, user)
                         } else {
                             Toast.makeText(
                                 this@RegisterActivity,
