@@ -67,7 +67,7 @@ class SignInActivity : BaseActivity() {
                 .addOnCompleteListener { task ->
                     hideProgressDialog()
                     if (task.isSuccessful) {
-                        FirestoreClass().signInUser(this@SignInActivity)
+                        FirestoreClass().loadUserData(this@SignInActivity)
                     } else {
                         Toast.makeText(
                             this@SignInActivity,

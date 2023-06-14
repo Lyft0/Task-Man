@@ -3,6 +3,7 @@ package com.example.taskman.firebase
 import android.app.Activity
 import android.util.Log
 import com.example.taskman.activities.MainActivity
+import com.example.taskman.activities.MyProfileActivity
 import com.example.taskman.activities.RegisterActivity
 import com.example.taskman.activities.SignInActivity
 import com.example.taskman.models.User
@@ -39,7 +40,7 @@ class FirestoreClass {
     }
 
     // get user data ketika sign in
-    fun signInUser(activity: Activity){
+    fun loadUserData(activity: Activity){
         mFireStore.collection(Constants.USERS)
             // document ID untuk users fields
             .document(getCurrentUserID())
@@ -54,6 +55,9 @@ class FirestoreClass {
                     }
                     is MainActivity -> {
                         activity.updateNavigationUserDetails(loggedInUser)
+                    }
+                    is MyProfileActivity -> {
+                        activity.setUserDataInUI(loggedInUser)
                     }
                 }
             }
