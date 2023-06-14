@@ -8,6 +8,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -18,12 +21,20 @@ import com.bumptech.glide.Glide
 import com.example.taskman.R
 import com.example.taskman.firebase.FirestoreClass
 import com.example.taskman.models.User
+import com.example.taskman.utils.Constants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.IOException
 
 class MyProfileActivity : BaseActivity() {
 
     private var mSelectedImageFileUri: Uri? = null
+
+    private lateinit var mUserDetails: User
+
+    private var mProfileImageURL: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +58,19 @@ class MyProfileActivity : BaseActivity() {
                 )
             }
         }
+
+        val btnUpdate = findViewById<Button>(R.id.btn_update)
+        btnUpdate.setOnClickListener {
+            // Here if the image is not selected then update the other details of user.
+            if (mSelectedImageFileUri != null) {
+                uploadUserImage()
+            } else {
+                showProgressDialog(resources.getString(R.string.please_wait))
+                // Call a function to update user details in the database.
+                updateUserProfileData()
+            }
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,6 +140,8 @@ class MyProfileActivity : BaseActivity() {
 
     // get user data dan tampilkan di edit profil
     fun setUserDataInUI(user: User) {
+        mUserDetails = user
+
         val userImage = findViewById<CircleImageView>(R.id.iv_user_image)
 
         Glide
@@ -135,6 +161,76 @@ class MyProfileActivity : BaseActivity() {
             fieldMobile.setText(user.mobile.toString())
         }
     }
+
+    private fun updateUserProfileData() {
+        val userHashMap = HashMap<String, Any>()
+        val fieldName = findViewById<EditText>(R.id.et_name)
+        val fieldMobile = findViewById<EditText>(R.id.et_mobile)
+
+        if (mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails.image) {
+            userHashMap[Constants.IMAGE] = mProfileImageURL
+        }
+        if (fieldName.text.toString() != mUserDetails.name) {
+            userHashMap[Constants.NAME] = fieldName.text.toString()
+        }
+        if (fieldMobile.text.toString() != mUserDetails.mobile.toString()) {
+            userHashMap[Constants.MOBILE] = fieldMobile.text.toString().toLong()
+        }
+        // Update the data in the database.
+        FirestoreClass().updateUserProfileData(this@MyProfileActivity, userHashMap)
+    }
+
+    private fun uploadUserImage() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        if (mSelectedImageFileUri != null) {
+            val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
+                "USER_IMAGE" + System.currentTimeMillis() + "." + getFileExtension(
+                    mSelectedImageFileUri
+                )
+            )
+            //adding the file to reference
+            sRef.putFile(mSelectedImageFileUri!!)
+                .addOnSuccessListener { taskSnapshot ->
+                    // The image upload is success
+                    Log.e(
+                        "Firebase Image URL",
+                        taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
+                    )
+                    // Get the downloadable url from the task snapshot
+                    taskSnapshot.metadata!!.reference!!.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            Log.e("Downloadable Image URL", uri.toString())
+                            // assign the image url to the variable.
+                            mProfileImageURL = uri.toString()
+                            // Call a function to update user details in the database.
+                            updateUserProfileData()
+                        }
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(
+                        this@MyProfileActivity,
+                        exception.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    hideProgressDialog()
+                }
+        }
+    }
+
+
+
+   // get the extension of selected image
+    private fun getFileExtension(uri: Uri?): String? {
+        return MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+    fun profileUpdateSuccess() {
+        hideProgressDialog()
+
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
 
     companion object {
         private const val READ_STORAGE_PERMISSION_CODE = 1
