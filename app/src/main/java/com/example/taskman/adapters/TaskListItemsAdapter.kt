@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskman.R
 import com.example.taskman.activities.TaskListActivity
@@ -92,6 +93,31 @@ open class TaskListItemsAdapter(
                 alertDialogForDeleteList(position, model.title)
             }
 
+            holder.itemView.findViewById<TextView>(R.id.tv_add_card).setOnClickListener {
+                holder.itemView.findViewById<TextView>(R.id.tv_add_card).visibility = View.GONE
+                holder.itemView.findViewById<CardView>(R.id.cv_add_card).visibility = View.VISIBLE
+
+                holder.itemView.findViewById<ImageButton>(R.id.ib_close_card_name).setOnClickListener {
+                    holder.itemView.findViewById<TextView>(R.id.tv_add_card).visibility = View.VISIBLE
+                    holder.itemView.findViewById<CardView>(R.id.cv_add_card).visibility = View.GONE
+                }
+
+                holder.itemView.findViewById<ImageButton>(R.id.ib_done_card_name).setOnClickListener {
+                    val cardName = holder.itemView.findViewById<EditText>(R.id.et_card_name).text.toString()
+                    if (cardName.isNotEmpty()) {
+                        if (context is TaskListActivity) {
+                            context.addCardToTaskList(position, cardName)
+                        }
+                    }else{
+                        Toast.makeText(context, "Please Enter Card Detail.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            // add card to list
+            holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).layoutManager = LinearLayoutManager(context)
+            holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).setHasFixedSize(true)
+            val adapter = CardListItemsAdapter(context, model.cards)
+            holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).adapter = adapter
         }
     }
 
