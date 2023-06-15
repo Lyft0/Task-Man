@@ -3,7 +3,6 @@ package com.example.taskman.models
 import android.os.Parcel
 import android.os.Parcelable
 
-
 data class SelectedMembers(
     val id: String = "",
     val image: String = ""

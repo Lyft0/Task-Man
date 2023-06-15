@@ -8,19 +8,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.taskman.R
+import com.example.taskman.adapters.CardMemberListItemsAdapter
 import com.example.taskman.dialogs.LabelColorListDialog
 import com.example.taskman.dialogs.MembersListDialog
 import com.example.taskman.firebase.FirestoreClass
-import com.example.taskman.models.Board
-import com.example.taskman.models.Card
-import com.example.taskman.models.Task
-import com.example.taskman.models.User
+import com.example.taskman.models.*
 import com.example.taskman.utils.Constants
 
 class CardDetailsActivity : BaseActivity() {
@@ -236,5 +237,43 @@ class CardDetailsActivity : BaseActivity() {
         listDialog.show()
     }
 
+    private fun setupSelectedMembersList() {
+        val cardAssignedMembersList =
+            mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].assignedTo
+
+        val selectedMembersList: ArrayList<SelectedMembers> = ArrayList()
+
+        for (i in mMembersDetailList.indices) {
+            for (j in cardAssignedMembersList) {
+                if (mMembersDetailList[i].id == j) {
+                    val selectedMember = SelectedMembers(
+                        mMembersDetailList[i].id,
+                        mMembersDetailList[i].image
+                    )
+                    selectedMembersList.add(selectedMember)
+                }
+            }
+        }
+
+        if (selectedMembersList.size > 0) {
+            selectedMembersList.add(SelectedMembers("", ""))
+
+            findViewById<TextView>(R.id.tv_select_members).visibility = View.GONE
+            findViewById<RecyclerView>(R.id.rv_selected_members_list).visibility = View.VISIBLE
+
+            findViewById<RecyclerView>(R.id.rv_selected_members_list).layoutManager = GridLayoutManager(this@CardDetailsActivity, 6)
+            val adapter = CardMemberListItemsAdapter(this@CardDetailsActivity, selectedMembersList)
+            findViewById<RecyclerView>(R.id.rv_selected_members_list).adapter = adapter
+            adapter.setOnClickListener(object :
+                CardMemberListItemsAdapter.OnClickListener {
+                override fun onClick() {
+                    membersListDialog()
+                }
+            })
+        } else {
+            findViewById<TextView>(R.id.tv_select_members).visibility = View.VISIBLE
+            findViewById<RecyclerView>(R.id.rv_selected_members_list).visibility = View.GONE
+        }
+    }
 
 }
