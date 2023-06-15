@@ -29,7 +29,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="visible"
-                tools:text="Select Label Color" />
+                tools:text="Select" />
 
             <View
                 android:layout_width="match_parent"

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.taskman.R
 import com.example.taskman.dialogs.LabelColorListDialog
+import com.example.taskman.dialogs.MembersListDialog
 import com.example.taskman.firebase.FirestoreClass
 import com.example.taskman.models.Board
 import com.example.taskman.models.Card
@@ -57,6 +58,10 @@ class CardDetailsActivity : BaseActivity() {
             }else{
                 Toast.makeText(this@CardDetailsActivity, "Enter card name.", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        findViewById<TextView>(R.id.tv_select_members).setOnClickListener {
+            membersListDialog()
         }
     }
 
@@ -201,5 +206,35 @@ class CardDetailsActivity : BaseActivity() {
         selectLabelColor.text = ""
         selectLabelColor.setBackgroundColor(Color.parseColor(mSelectedColor))
     }
+
+    private fun membersListDialog() {
+        val cardAssignedMembersList =
+            mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].assignedTo
+
+        if (cardAssignedMembersList.size > 0) {
+            // Here we got the details of assigned members list from the global members list which is passed from the Task List screen.
+            for (i in mMembersDetailList.indices) {
+                for (j in cardAssignedMembersList) {
+                    if (mMembersDetailList[i].id == j) {
+                        mMembersDetailList[i].selected = true
+                    }
+                }
+            }
+        } else {
+            for (i in mMembersDetailList.indices) {
+                mMembersDetailList[i].selected = false
+            }
+        }
+        val listDialog = object : MembersListDialog(
+            this@CardDetailsActivity,
+            mMembersDetailList,
+            "Select Member"
+        ) {
+            override fun onItemSelected(user: User, action: String) {
+            }
+        }
+        listDialog.show()
+    }
+
 
 }
