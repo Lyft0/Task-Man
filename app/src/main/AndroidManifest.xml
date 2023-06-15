@@ -16,6 +16,11 @@
         android:theme="@style/Theme.TaskMan"
         tools:targetApi="31">
         <activity
+            android:name=".activities.TaskListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TaskMan.NoActionBar" />
+        <activity
             android:name=".activities.CreateBoardActivity"
             android:exported="false"
             android:screenOrientation="portrait"
