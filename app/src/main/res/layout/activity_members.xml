@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.TaskListActivity">
+    tools:context=".activities.MembersActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_task_list_activity"
+            android:id="@+id/toolbar_members_activity"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,12 +24,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/ic_background"
-        android:padding="10dp">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_task_list"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white"
+            android:elevation="10dp"
+            app:cardCornerRadius="10dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_members_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </LinearLayout>

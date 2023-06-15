@@ -1,8 +1,11 @@
 package com.example.taskman.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +46,22 @@ class TaskListActivity : BaseActivity() {
         }
         toolbarTaskList.setNavigationOnClickListener { onBackPressed() }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_members, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_members -> {
+                startActivity(Intent(this@TaskListActivity, MembersActivity::class.java))
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     fun boardDetails(board: Board) {
         mBoardDetails = board
