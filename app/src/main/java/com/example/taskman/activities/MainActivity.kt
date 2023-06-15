@@ -29,8 +29,8 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
-        //A unique code for starting the activity for result
         const val MY_PROFILE_REQUEST_CODE: Int = 11
+        const val CREATE_BOARD_REQUEST_CODE: Int = 12
     }
 
     private lateinit var mUserName: String
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         fabCreateBoard.setOnClickListener {
             val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
             intent.putExtra(Constants.NAME, mUserName)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
     }
 
@@ -128,8 +128,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (resultCode == Activity.RESULT_OK
             && requestCode == MY_PROFILE_REQUEST_CODE
         ) {
-            // Get the user updated details.
             FirestoreClass().loadUserData(this@MainActivity)
+        } else if (resultCode == Activity.RESULT_OK
+            && requestCode == CREATE_BOARD_REQUEST_CODE
+        ) {
+            FirestoreClass().getBoardsList(this@MainActivity)
         } else {
             Log.e("Cancelled", "Cancelled")
         }
