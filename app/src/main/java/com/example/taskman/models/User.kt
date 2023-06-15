@@ -30,4 +30,14 @@ data class User (
         writeLong(mobile)
         writeString(fcmToken)
     }
+
+    companion object CREATOR : Parcelable.Creator<User> {
+        override fun createFromParcel(parcel: Parcel): User {
+            return User(parcel)
+        }
+
+        override fun newArray(size: Int): Array<User?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

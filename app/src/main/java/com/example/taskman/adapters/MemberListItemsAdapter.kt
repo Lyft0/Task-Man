@@ -47,5 +47,9 @@ open class MemberListItemsAdapter(
         return list.size
     }
 
+    interface OnClickListener {
+        fun onClick(position: Int, user: User, action: String)
+    }
+
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
