@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.taskman.R
 import com.example.taskman.firebase.FirestoreClass
 import com.example.taskman.models.User
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -34,6 +35,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val navView = findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
         FirestoreClass().loadUserData(this@MainActivity)
+
+        val fabCreateBoard = findViewById<FloatingActionButton>(R.id.fab_create_board)
+        fabCreateBoard.setOnClickListener {
+            startActivity(Intent(this@MainActivity, CreateBoardActivity::class.java))
+        }
     }
 
     private fun setupActionBar() {
