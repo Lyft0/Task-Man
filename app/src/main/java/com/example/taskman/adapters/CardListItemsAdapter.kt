@@ -1,6 +1,7 @@
 package com.example.taskman.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,21 @@ open class CardListItemsAdapter(
         val model = list[position]
 
         if (holder is MyViewHolder) {
+
+            if(model.labelColor.isNotEmpty()) {
+                holder.itemView.findViewById<View>(R.id.view_label_color).visibility= View.VISIBLE
+                holder.itemView.findViewById<View>(R.id.view_label_color).setBackgroundColor(Color.parseColor(model.labelColor))
+            }else{
+                holder.itemView.findViewById<View>(R.id.view_label_color).visibility= View.GONE
+            }
+
             holder.itemView.findViewById<TextView>(R.id.tv_card_name).text = model.name
+            holder.itemView.setOnClickListener{
+                if (onClickListener != null) {
+                    onClickListener!!.onClick(position)
+                }
+            }
+
         }
     }
 
@@ -43,7 +58,7 @@ open class CardListItemsAdapter(
     }
 
     interface OnClickListener {
-        fun onClick(position: Int, card: Card)
+        fun onClick(cardPosition: Int)
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)

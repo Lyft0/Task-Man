@@ -1,5 +1,6 @@
 package com.example.taskman.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
@@ -116,8 +117,18 @@ open class TaskListItemsAdapter(
             // add card to list
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).layoutManager = LinearLayoutManager(context)
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).setHasFixedSize(true)
+
             val adapter = CardListItemsAdapter(context, model.cards)
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).adapter = adapter
+            // card detail
+            adapter.setOnClickListener(
+                object : CardListItemsAdapter.OnClickListener {
+                override fun onClick(cardPosition: Int) {
+                    if (context is TaskListActivity) {
+                        context.cardDetails(holder.adapterPosition, cardPosition)
+                    }
+                }
+            })
         }
     }
 
