@@ -10,8 +10,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_selected_member_image"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:contentDescription="image"
         android:src="@drawable/ic_user_place_holder"
         android:visibility="visible"
@@ -21,8 +21,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_add_member"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:contentDescription="image"
         android:src="@drawable/ic_add_member"
         android:visibility="visible"

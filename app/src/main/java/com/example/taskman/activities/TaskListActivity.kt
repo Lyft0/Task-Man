@@ -23,7 +23,7 @@ class TaskListActivity : BaseActivity() {
 
     private lateinit var mBoardDetails: Board
     private lateinit var mBoardDocumentId: String
-    private lateinit var mAssignedMembersDetailList: ArrayList<User>
+    lateinit var mAssignedMembersDetailList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,16 +93,16 @@ class TaskListActivity : BaseActivity() {
         hideProgressDialog()
         setupActionBar()
 
-        val addTaskList = Task("Add List")
-        board.taskList.add(addTaskList)
-
-        val rvTaskList = findViewById<RecyclerView>(R.id.rv_task_list)
-        rvTaskList.layoutManager =
-            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
-        rvTaskList.setHasFixedSize(true)
-
-        val adapter = TaskListItemsAdapter(this@TaskListActivity, board.taskList)
-        rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
+//        val addTaskList = Task("Add List")
+//        board.taskList.add(addTaskList)
+//
+//        val rvTaskList = findViewById<RecyclerView>(R.id.rv_task_list)
+//        rvTaskList.layoutManager =
+//            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
+//        rvTaskList.setHasFixedSize(true)
+//
+//        val adapter = TaskListItemsAdapter(this@TaskListActivity, board.taskList)
+//        rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
 
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getAssignedMembersListDetails(
@@ -185,6 +185,17 @@ class TaskListActivity : BaseActivity() {
     fun boardMembersDetailList(list: ArrayList<User>) {
         mAssignedMembersDetailList = list
         hideProgressDialog()
+
+        val addTaskList = Task("Add List")
+        mBoardDetails.taskList.add(addTaskList)
+
+        val rvTaskList = findViewById<RecyclerView>(R.id.rv_task_list)
+        rvTaskList.layoutManager =
+            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
+        rvTaskList.setHasFixedSize(true)
+
+        val adapter = TaskListItemsAdapter(this@TaskListActivity, mBoardDetails.taskList)
+        rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
     }
 
     companion object {

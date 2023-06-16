@@ -1,6 +1,7 @@
 package com.example.taskman.adapters
 
 import android.content.Context
+import android.text.BoringLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 open class CardMemberListItemsAdapter(
     private val context: Context,
-    private var list: ArrayList<SelectedMembers>
+    private var list: ArrayList<SelectedMembers>,
+    private val assignMembers: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var onClickListener: OnClickListener? = null
@@ -32,7 +34,7 @@ open class CardMemberListItemsAdapter(
 
         if (holder is MyViewHolder) {
 
-            if (position == list.size - 1) {
+            if (position == list.size - 1 && assignMembers) {
                 holder.itemView.findViewById<CircleImageView>(R.id.iv_add_member).visibility = View.VISIBLE
                 holder.itemView.findViewById<CircleImageView>(R.id.iv_selected_member_image).visibility = View.GONE
             } else {
