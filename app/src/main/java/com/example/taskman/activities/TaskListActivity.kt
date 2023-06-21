@@ -208,6 +208,14 @@ class TaskListActivity : BaseActivity() {
         alertDialog.show()
     }
 
+    // ketika drag and drop
+    fun updateCardsInTaskList(taskListPosition: Int, cards: ArrayList<Card>) {
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+        mBoardDetails.taskList[taskListPosition].cards = cards
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
+    }
+
 
     companion object {
         const val MEMBERS_REQUEST_CODE: Int = 13
