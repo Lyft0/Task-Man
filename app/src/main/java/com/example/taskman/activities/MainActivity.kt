@@ -118,10 +118,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         Glide
             .with(this@MainActivity)
-            .load(user.image) // URL of the image
-            .centerCrop() // Scale type of the image.
-            .placeholder(R.drawable.ic_user_place_holder) // A default place holder
-            .into(navUserImage) // the view in which the image will be loaded.
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(navUserImage)
 
         val navUsername =   headerView.findViewById<TextView>(R.id.tm_username)
         navUsername.text = user.name

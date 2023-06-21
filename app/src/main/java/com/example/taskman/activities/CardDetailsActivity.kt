@@ -232,7 +232,6 @@ class CardDetailsActivity : BaseActivity() {
             mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].assignedTo
 
         if (cardAssignedMembersList.size > 0) {
-            // Here we got the details of assigned members list from the global members list which is passed from the Task List screen.
             for (i in mMembersDetailList.indices) {
                 for (j in cardAssignedMembersList) {
                     if (mMembersDetailList[i].id == j) {
@@ -296,10 +295,8 @@ class CardDetailsActivity : BaseActivity() {
 
         if (selectedMembersList.size > 0) {
             selectedMembersList.add(SelectedMembers("", ""))
-
             findViewById<TextView>(R.id.tv_select_members).visibility = View.GONE
             findViewById<RecyclerView>(R.id.rv_selected_members_list).visibility = View.VISIBLE
-
             findViewById<RecyclerView>(R.id.rv_selected_members_list).layoutManager = GridLayoutManager(this@CardDetailsActivity, 6)
             val adapter = CardMemberListItemsAdapter(this@CardDetailsActivity, selectedMembersList, true)
             findViewById<RecyclerView>(R.id.rv_selected_members_list).adapter = adapter

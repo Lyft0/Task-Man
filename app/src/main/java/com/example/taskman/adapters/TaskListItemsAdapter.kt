@@ -22,12 +22,10 @@ open class TaskListItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_task, parent, false)
-        // Here the layout params are converted dynamically according to the screen size as width is 70% and height is wrap_content.
         val layoutParams = LinearLayout.LayoutParams(
             (parent.width * 0.7).toInt(),
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        // Here the dynamic margins are applied to the view.
         layoutParams.setMargins((15.toDp()).toPx(), 0, (40.toDp()).toPx(), 0)
         view.layoutParams = layoutParams
 
@@ -69,7 +67,7 @@ open class TaskListItemsAdapter(
             }
 
             holder.itemView.findViewById<ImageButton>(R.id.ib_edit_list_name).setOnClickListener {
-                holder.itemView.findViewById<EditText>(R.id.et_edit_task_list_name).setText(model.title) // Set the existing title
+                holder.itemView.findViewById<EditText>(R.id.et_edit_task_list_name).setText(model.title)
                 holder.itemView.findViewById<LinearLayout>(R.id.ll_title_view).visibility = View.GONE
                 holder.itemView.findViewById<CardView>(R.id.cv_edit_task_list_name).visibility = View.VISIBLE
             }
@@ -114,13 +112,13 @@ open class TaskListItemsAdapter(
                     }
                 }
             }
-            // add card to list
+
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).layoutManager = LinearLayoutManager(context)
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).setHasFixedSize(true)
 
             val adapter = CardListItemsAdapter(context, model.cards)
             holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list).adapter = adapter
-            // card detail
+
             adapter.setOnClickListener(
                 object : CardListItemsAdapter.OnClickListener {
                 override fun onClick(cardPosition: Int) {
@@ -145,12 +143,9 @@ open class TaskListItemsAdapter(
 
     private fun alertDialogForDeleteList(position: Int, title: String) {
         val builder = AlertDialog.Builder(context)
-        //set title for alert dialog
         builder.setTitle("Alert")
-        //set message for alert dialog
         builder.setMessage("Are you sure you want to delete $title.")
         builder.setIcon(android.R.drawable.ic_dialog_alert)
-        //performing positive action
         builder.setPositiveButton("Yes") { dialogInterface, which ->
             dialogInterface.dismiss() // Dialog will be dismissed
 
@@ -158,15 +153,12 @@ open class TaskListItemsAdapter(
                 context.deleteTaskList(position)
             }
         }
-        //performing negative action
         builder.setNegativeButton("No") { dialogInterface, which ->
             dialogInterface.dismiss() // Dialog will be dismissed
         }
-        // Create the AlertDialog
         val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
-        alertDialog.show()  // show the dialog to UI
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)

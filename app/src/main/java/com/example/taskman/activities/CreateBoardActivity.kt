@@ -113,10 +113,10 @@ class CreateBoardActivity : BaseActivity() {
             try {
                 Glide
                     .with(this)
-                    .load(Uri.parse(mSelectedImageFileUri.toString())) // URI of the image
+                    .load(Uri.parse(mSelectedImageFileUri.toString()))
                     .centerCrop() // Scale type of the image.
-                    .placeholder(R.drawable.ic_board_place_holder) // A default place holder
-                    .into(BoardImage) // the view in which the image will be loaded.
+                    .placeholder(R.drawable.ic_board_place_holder)
+                    .into(BoardImage)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -125,7 +125,7 @@ class CreateBoardActivity : BaseActivity() {
 
     private fun createBoard() {
         val assignedUsersArrayList: ArrayList<String> = ArrayList()
-        assignedUsersArrayList.add(getCurrentUserID()) // adding the current user id.
+        assignedUsersArrayList.add(getCurrentUserID())
 
         val boardName = findViewById<EditText>(R.id.et_board_name)
         val board = Board(
@@ -146,21 +146,14 @@ class CreateBoardActivity : BaseActivity() {
 
         sRef.putFile(mSelectedImageFileUri!!)
             .addOnSuccessListener { taskSnapshot ->
-                // The image upload is success
                 Log.e(
                     "Firebase Image URL",
                     taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
                 )
-
-                // Get the downloadable url from the task snapshot
                 taskSnapshot.metadata!!.reference!!.downloadUrl
                     .addOnSuccessListener { uri ->
                         Log.e("Downloadable Image URL", uri.toString())
-
-                        // assign the image url to the variable.
                         mBoardImageURL = uri.toString()
-
-                        // Call a function to create the board.
                         createBoard()
                     }
             }

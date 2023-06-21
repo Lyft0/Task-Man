@@ -1,6 +1,7 @@
 package com.example.taskman.activities
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -55,19 +56,12 @@ class TaskListActivity : BaseActivity() {
         if (resultCode == Activity.RESULT_OK
             && (requestCode == MEMBERS_REQUEST_CODE || requestCode == CARD_DETAILS_REQUEST_CODE)
         ) {
-            // Show the progress dialog.
             showProgressDialog(resources.getString(R.string.please_wait))
             FirestoreClass().getBoardDetails(this@TaskListActivity, mBoardDocumentId)
         } else {
             Log.e("Cancelled", "Cancelled")
         }
     }
-
-//    override fun onResume() {
-//        showProgressDialog(resources.getString(R.string.please_wait))
-//        FirestoreClass().getBoardDetails(this@TaskListActivity, mBoardDocumentId)
-//        super.onResume()
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_members, menu)
@@ -82,28 +76,24 @@ class TaskListActivity : BaseActivity() {
                 startActivityForResult(intent, MEMBERS_REQUEST_CODE)
                 return true
             }
+            R.id.deleted_board -> {
+                alertDialogForDeleteBoard(mBoardDetails.name)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
+    fun deleteBoard(){
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().deleteBoard(this@TaskListActivity, mBoardDetails.documentId)
+        startActivity(Intent(this, MainActivity::class.java))
+    }
 
     fun boardDetails(board: Board) {
         mBoardDetails = board
-
         hideProgressDialog()
         setupActionBar()
-
-//        val addTaskList = Task("Add List")
-//        board.taskList.add(addTaskList)
-//
-//        val rvTaskList = findViewById<RecyclerView>(R.id.rv_task_list)
-//        rvTaskList.layoutManager =
-//            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
-//        rvTaskList.setHasFixedSize(true)
-//
-//        val adapter = TaskListItemsAdapter(this@TaskListActivity, board.taskList)
-//        rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
-
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getAssignedMembersListDetails(
             this@TaskListActivity,
@@ -113,19 +103,16 @@ class TaskListActivity : BaseActivity() {
 
     fun addUpdateTaskListSuccess() {
         hideProgressDialog()
-        // Here get the updated board details.
-        // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getBoardDetails(this@TaskListActivity, mBoardDetails.documentId)
     }
 
     fun createTaskList(taskListName: String) {
         Log.e("Task List Name", taskListName)
-        // Create and Assign the task details
         val task = Task(taskListName, FirestoreClass().getCurrentUserID())
 
-        mBoardDetails.taskList.add(0, task) // Add task to the first position of ArrayList
-        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1) // Remove the last position as we have added the item manually for adding the TaskList.
+        mBoardDetails.taskList.add(0, task)
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
 
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
@@ -135,7 +122,6 @@ class TaskListActivity : BaseActivity() {
         val task = Task(listName, model.createdBy)
         mBoardDetails.taskList[position] = task
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
-        // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
     }
@@ -143,7 +129,6 @@ class TaskListActivity : BaseActivity() {
     fun deleteTaskList(position: Int){
         mBoardDetails.taskList.removeAt(position)
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
-        // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
     }
@@ -173,10 +158,7 @@ class TaskListActivity : BaseActivity() {
             mBoardDetails.taskList[position].createdBy,
             cardsList
         )
-
         mBoardDetails.taskList[position] = task
-
-        // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
     }
@@ -195,8 +177,37 @@ class TaskListActivity : BaseActivity() {
         rvTaskList.setHasFixedSize(true)
 
         val adapter = TaskListItemsAdapter(this@TaskListActivity, mBoardDetails.taskList)
-        rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
+        rvTaskList.adapter = adapter
     }
+
+    fun boardDeletedSuccessfully() {
+        hideProgressDialog()
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun alertDialogForDeleteBoard(cardName: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Alert")
+        builder.setMessage(
+            resources.getString(
+                R.string.confirmation_message_to_delete_board,
+                cardName
+            )
+        )
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton("Yes") { dialogInterface, which ->
+            dialogInterface.dismiss()
+            deleteBoard()
+        }
+        builder.setNegativeButton("No") { dialogInterface, which ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
 
     companion object {
         const val MEMBERS_REQUEST_CODE: Int = 13

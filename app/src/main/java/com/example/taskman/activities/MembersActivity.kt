@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -60,7 +61,6 @@ class MembersActivity : BaseActivity() {
         FirestoreClass().assignMemberToBoard(this@MembersActivity, mBoardDetails, user)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add_member, menu)
         return super.onCreateOptionsMenu(menu)
@@ -102,16 +102,22 @@ class MembersActivity : BaseActivity() {
 
     fun setupMembersList(list: ArrayList<User>) {
         mAssignedMembersList = list
-
         hideProgressDialog()
-
         val rvMemberList = findViewById<RecyclerView>(R.id.rv_members_list)
         rvMemberList.layoutManager = LinearLayoutManager(this@MembersActivity)
         rvMemberList.setHasFixedSize(true)
-
         val adapter = MemberListItemsAdapter(this@MembersActivity, list)
         rvMemberList.adapter = adapter
     }
+
+    fun removeMember(position: Int, id: String){
+        Log.v("test","${mBoardDetails}")
+//        mBoardDetails.taskList.removeAt(position)
+//        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+//        showProgressDialog(resources.getString(R.string.please_wait))
+//        FirestoreClass().removeMemberFromBoard(this@MembersActivity, mBoardDetails)
+    }
+
 
     override fun onBackPressed() {
         if (anyChangesDone) {

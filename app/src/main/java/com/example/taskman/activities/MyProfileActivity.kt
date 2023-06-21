@@ -61,12 +61,10 @@ class MyProfileActivity : BaseActivity() {
 
         val btnUpdate = findViewById<Button>(R.id.btn_update)
         btnUpdate.setOnClickListener {
-            // Here if the image is not selected then update the other details of user.
             if (mSelectedImageFileUri != null) {
                 uploadUserImage()
             } else {
                 showProgressDialog(resources.getString(R.string.please_wait))
-                // Call a function to update user details in the database.
                 updateUserProfileData()
             }
         }
@@ -85,10 +83,10 @@ class MyProfileActivity : BaseActivity() {
             try {
                 Glide
                     .with(this@MyProfileActivity)
-                    .load(Uri.parse(mSelectedImageFileUri.toString())) // URI of the image
-                    .centerCrop() // Scale type of the image.
-                    .placeholder(R.drawable.ic_user_place_holder) // A default place holder
-                    .into(userImage) // the view in which the image will be loaded.
+                    .load(Uri.parse(mSelectedImageFileUri.toString()))
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_user_place_holder)
+                    .into(userImage)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -168,7 +166,6 @@ class MyProfileActivity : BaseActivity() {
         if (fieldMobile.text.toString() != mUserDetails.mobile.toString()) {
             userHashMap[Constants.MOBILE] = fieldMobile.text.toString().toLong()
         }
-        // Update the data in the database.
         FirestoreClass().updateUserProfileData(this@MyProfileActivity, userHashMap)
     }
 
@@ -179,21 +176,16 @@ class MyProfileActivity : BaseActivity() {
                 "USER_IMAGE" + System.currentTimeMillis() + "."
                         + Constants.getFileExtension(this@MyProfileActivity, mSelectedImageFileUri)
             )
-            //adding the file to reference
             sRef.putFile(mSelectedImageFileUri!!)
                 .addOnSuccessListener { taskSnapshot ->
-                    // The image upload is success
                     Log.e(
                         "Firebase Image URL",
                         taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
                     )
-                    // Get the downloadable url from the task snapshot
                     taskSnapshot.metadata!!.reference!!.downloadUrl
                         .addOnSuccessListener { uri ->
                             Log.e("Downloadable Image URL", uri.toString())
-                            // assign the image url to the variable.
                             mProfileImageURL = uri.toString()
-                            // Call a function to update user details in the database.
                             updateUserProfileData()
                         }
                 }

@@ -23,7 +23,6 @@ class RegisterActivity : BaseActivity() {
         setupActionBar()
     }
 
-    // user success register
     fun userRegisteredSuccess(){
         Toast.makeText(
             this@RegisterActivity,
@@ -32,7 +31,6 @@ class RegisterActivity : BaseActivity() {
         ).show()
         hideProgressDialog()
         FirebaseAuth.getInstance().signOut()
-        // finish register screen
         finish()
     }
 
@@ -55,7 +53,6 @@ class RegisterActivity : BaseActivity() {
         }
     }
 
-    // register user
     private fun registerUser(){
         val fieldName = findViewById<EditText>(R.id.field_name)
         val fieldEmail = findViewById<EditText>(R.id.field_email)
@@ -66,17 +63,13 @@ class RegisterActivity : BaseActivity() {
         val password: String = fieldPass.text.toString().trim { it <= ' ' }
 
         if (validateForm(name, email, password)) {
-            // Show the progress dialog.
             showProgressDialog(resources.getString(R.string.please_wait))
             FirebaseApp.initializeApp(this)
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     OnCompleteListener<AuthResult> { task ->
-                        // If the registration is successfully done
                         if (task.isSuccessful) {
-                            // firebase registered user
                             val firebaseUser: FirebaseUser = task.result!!.user!!
-                            // registered Email
                             val registeredEmail = firebaseUser.email!!
                             val user = User(
                                 firebaseUser.uid, name, registeredEmail
@@ -93,7 +86,6 @@ class RegisterActivity : BaseActivity() {
         }
     }
 
-    // validasi form
     private fun validateForm(name: String, email: String, password: String): Boolean {
         return when {
             TextUtils.isEmpty(name) -> {

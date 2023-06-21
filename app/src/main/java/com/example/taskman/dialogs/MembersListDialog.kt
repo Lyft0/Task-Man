@@ -35,7 +35,6 @@ abstract class MembersListDialog(
         view.findViewById<TextView>(R.id.tvTitle).text = title
 
         if (list.size > 0) {
-
             view.findViewById<RecyclerView>(R.id.rvList).layoutManager = LinearLayoutManager(context)
             adapter = MemberListItemsAdapter(context, list)
             view.findViewById<RecyclerView>(R.id.rvList).adapter = adapter

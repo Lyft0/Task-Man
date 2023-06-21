@@ -1,5 +1,6 @@
 package com.example.taskman.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.taskman.R
+import com.example.taskman.activities.TaskListActivity
 import com.example.taskman.models.Board
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -32,7 +34,6 @@ open class BoardItemsAdapter (
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val model = list[position]
 
-            // 24 caliak an ko aaa
             if (holder is MyViewHolder) {
                 Glide
                     .with(context)

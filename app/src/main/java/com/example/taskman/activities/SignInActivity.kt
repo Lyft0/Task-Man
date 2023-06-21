@@ -80,7 +80,6 @@ class SignInActivity : BaseActivity() {
 
     }
 
-    // validasi form
     private fun validateForm(email: String, password: String): Boolean {
         return when {
             TextUtils.isEmpty(email) -> {

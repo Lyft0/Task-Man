@@ -38,7 +38,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut metus ex. Etiam mollis libero in massa."
+        android:text="Organize tasks, collaborate, and boost your productivity. Transform the way you work, one task at a time."
         android:textSize="16sp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"

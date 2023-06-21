@@ -8,6 +8,7 @@ import com.example.taskman.models.Board
 import com.example.taskman.models.User
 import com.example.taskman.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
@@ -95,6 +96,25 @@ class FirestoreClass {
             }
     }
 
+    fun deleteBoard(activity: TaskListActivity, documentId: String){
+        mFireStore.collection(Constants.BOARDS)
+            .document(documentId)
+            .delete()
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "Board deleted successfully.")
+                Toast.makeText(activity, "Board deleted successfully.", Toast.LENGTH_SHORT).show()
+                activity.boardDeletedSuccessfully()
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while deleting board.",
+                    e
+                )
+            }
+    }
+
     fun addUpdateTaskList(activity: Activity, board: Board) {
         val taskListHashMap = HashMap<String, Any>()
         taskListHashMap[Constants.TASK_LIST] = board.taskList
@@ -122,14 +142,12 @@ class FirestoreClass {
 
 
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap: HashMap<String, Any>) {
-        mFireStore.collection(Constants.USERS) // Collection Name
-            .document(getCurrentUserID()) // Document ID
-            .update(userHashMap) // A hashmap of fields which are to be updated.
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserID())
+            .update(userHashMap)
             .addOnSuccessListener {
-                // Profile data is updated successfully.
                 Log.e(activity.javaClass.simpleName, "Profile Data updated successfully!")
                 Toast.makeText(activity, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
-                // Notify the success result.
                 activity.profileUpdateSuccess()
             }
             .addOnFailureListener { e ->
@@ -194,14 +212,13 @@ class FirestoreClass {
     }
 
     fun getAssignedMembersListDetails(activity: Activity, assignedTo: ArrayList<String>) {
-        mFireStore.collection(Constants.USERS) // Collection Name
-            .whereIn(Constants.ID, assignedTo) // Here the database field name and the id's of the members.
+        mFireStore.collection(Constants.USERS)
+            .whereIn(Constants.ID, assignedTo)
             .get()
             .addOnSuccessListener { document ->
                 Log.e(activity.javaClass.simpleName, document.documents.toString())
                 val usersList: ArrayList<User> = ArrayList()
                 for (i in document.documents) {
-                    // Convert all the document snapshot to the object using the data model class.
                     val user = i.toObject(User::class.java)!!
                     usersList.add(user)
                 }
@@ -251,6 +268,26 @@ class FirestoreClass {
 
     fun assignMemberToBoard(activity: MembersActivity, board: Board, user: User) {
         val assignedToHashMap = HashMap<String, Any>()
+        assignedToHashMap[Constants.ASSIGNED_TO] = board.assignedTo
+
+        mFireStore.collection(Constants.BOARDS)
+            .document(board.documentId)
+            .update(assignedToHashMap)
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "TaskList updated successfully.")
+                activity.memberAssignSuccess(user)
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
+            }
+    }
+
+    fun removeMemberFromBoard(activity: MembersActivity, board: Board, user: User, path: String) {
+        val subFieldPath = "taskList."
+        val assignedToHashMap = hashMapOf<String, Any>(
+            "capital" to FieldValue.delete()
+        )
         assignedToHashMap[Constants.ASSIGNED_TO] = board.assignedTo
 
         mFireStore.collection(Constants.BOARDS)
